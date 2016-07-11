@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ComicBookGallery.Data;
+using ComicBookGallery.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,15 +8,33 @@ using System.Web.Mvc;
 
 namespace ComicBookGallery.Controllers
 {
-    public class ComicBooksController:Controller
+    public class ComicBooksController : Controller
     {
-        public ActionResult Detail()
+        private ComicBookRepository _comicBookRepository = null;
+        public ComicBooksController()
         {
-            if(DateTime.Today.DayOfWeek == DayOfWeek.Thursday)
+            _comicBookRepository = new ComicBookRepository();
+        }
+        public ActionResult Index()
+        {
+            var comic = _comicBookRepository.GetComicBooks();
+            return View(comic);
+        }
+        public ActionResult Detail(int? id)
+        {
+
+            if (id == null)
             {
-                return Redirect("/");
+                return HttpNotFound();
             }
-            return Content("Hello From Content Comic Book");
+            var comicBook = _comicBookRepository.GetComicBook((int)id);
+          
+            return View(comicBook);
+        }
+        public ActionResult Index_Skill_Test()
+        {
+            var comic = _comicBookRepository.GetComicBooks();
+            return View(comic);
         }
     }
 }
